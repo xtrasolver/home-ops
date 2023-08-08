@@ -1,0 +1,30 @@
+apiVersion: metal.sidero.dev/v1alpha1
+kind: ServerClass
+metadata:
+  name: rpi4-4gb
+spec:
+  # bootFromDiskMethod: ipxe-sanboot
+  configPatches:
+    - op: replace
+      path: /machine/install/disk
+      value: /dev/mmcblk1
+  environmentRef:
+    name: rpi4-arm64
+  qualifiers:
+    systemInformation:
+      - family: Raspberry Pi
+        manufacturer: Raspberry Pi Foundation
+        productName: Raspberry Pi 4 Model B
+        version: C03111 # 1.1
+      - family: Raspberry Pi
+        manufacturer: Raspberry Pi Foundation
+        productName: Raspberry Pi 4 Model B
+        version: C03112 # 1.2
+      - family: Raspberry Pi
+        manufacturer: Raspberry Pi Foundation
+        productName: Raspberry Pi 4 Model B
+        version: C03114 # 1.4
+      - family: Raspberry Pi
+        manufacturer: Raspberry Pi Foundation
+        productName: Raspberry Pi 4 Model B
+        version: C03115 # 1.5

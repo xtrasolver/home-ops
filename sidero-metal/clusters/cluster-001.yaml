@@ -1,0 +1,85 @@
+---
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: Cluster
+metadata:
+  name: cluster-001
+  namespace: default
+spec:
+  clusterNetwork:
+    pods:
+      cidrBlocks:
+        - 10.244.0.0/16
+    services:
+      cidrBlocks:
+        - 10.96.0.0/12
+  controlPlaneRef:
+    apiVersion: controlplane.cluster.x-k8s.io/v1alpha3
+    kind: TalosControlPlane
+    name: cluster-001-cp
+  infrastructureRef:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+    kind: MetalCluster
+    name: cluster-001\
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+kind: MetalCluster
+metadata:
+  name: cluster-001
+  namespace: default
+spec:
+  controlPlaneEndpoint:
+    host: 192.168.21.20
+    port: 6443
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+kind: MetalMachineTemplate
+metadata:
+  name: cluster-001-cp
+  namespace: default
+spec:
+  template:
+    spec:
+      serverClassRef:
+        apiVersion: metal.sidero.dev/v1alpha1
+        kind: ServerClass
+        name: rpi4-8gb
+---
+apiVersion: controlplane.cluster.x-k8s.io/v1alpha3
+kind: TalosControlPlane
+metadata:
+  name: cluster-001-cp
+  namespace: default
+spec:
+  controlPlaneConfig:
+    controlplane:
+      configPatches:
+      - op: add
+        path: /machine/network
+        value:
+          interfaces:
+          - dhcp: true
+            interface: eth0
+            vip:
+              ip: 192.168.21.20
+      generateType: controlplane
+      talosVersion: v1.5.0-beta.0
+    init:
+      configPatches:
+      - op: add
+        path: /machine/network
+        value:
+          interfaces:
+          - dhcp: true
+            interface: eth0
+            vip:
+              ip: 192.168.21.20
+      generateType: init
+      # renovate: depName=siderolabs/talos
+      talosVersion: v1.5.0-beta.0
+  infrastructureTemplate:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+    kind: MetalMachineTemplate
+    name: cluster-001-cp
+  replicas: 1
+  # renovate: depName=registry.k8s.io/kube-apiserver
+  version: v1.27.4
