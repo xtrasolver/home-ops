@@ -30,3 +30,11 @@ kubectl get talosconfig cluster-001-cp-bzs77 -o jsonpath='{.status.talosConfig}'
 
 # kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
+$env:CONTROL_PLANE_SERVERCLASS="rpi4-8gb"
+$env:WORKER_SERVERCLASS="rpi4-4gb"
+$env:TALOS_VERSION="v1.5.0-beta.0"
+$env:KUBERNETES_VERSION="v1.27.4"
+$env:CONTROL_PLANE_PORT="6443"
+$env:CONTROL_PLANE_ENDPOINT="192.168.21.20"
+
+clusterctl generate cluster management-plane -i sidero > management-plane.yaml
