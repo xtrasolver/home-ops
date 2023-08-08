@@ -19,7 +19,7 @@ spec:
   infrastructureRef:
     apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
     kind: MetalCluster
-    name: cluster-001\
+    name: cluster-001
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
 kind: MetalCluster
