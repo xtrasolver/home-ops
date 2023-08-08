@@ -1,7 +1,7 @@
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: Cluster
 metadata:
-  name: management-plane
+  name: cluster-001
   namespace: default
 spec:
   clusterNetwork:
@@ -14,16 +14,16 @@ spec:
   controlPlaneRef:
     apiVersion: controlplane.cluster.x-k8s.io/v1alpha3
     kind: TalosControlPlane
-    name: management-plane-cp
+    name: cluster-001-cp
   infrastructureRef:
     apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
     kind: MetalCluster
-    name: management-plane
+    name: cluster-001
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
 kind: MetalCluster
 metadata:
-  name: management-plane
+  name: cluster-001
   namespace: default
 spec:
   controlPlaneEndpoint:
@@ -33,7 +33,7 @@ spec:
 apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
 kind: MetalMachineTemplate
 metadata:
-  name: management-plane-cp
+  name: cluster-001-cp
   namespace: default
 spec:
   template:
@@ -46,38 +46,38 @@ spec:
 apiVersion: controlplane.cluster.x-k8s.io/v1alpha3
 kind: TalosControlPlane
 metadata:
-  name: management-plane-cp
+  name: cluster-001-cp
   namespace: default
 spec:
   controlPlaneConfig:
     controlplane:
       generateType: controlplane
-      talosVersion: v1.5.0-beta.0
+      talosVersion: v1.4.7
   infrastructureTemplate:
     apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
     kind: MetalMachineTemplate
-    name: management-plane-cp
+    name: cluster-001-cp
   replicas: 1
   version: v1.27.4
 ---
 apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
 kind: TalosConfigTemplate
 metadata:
-  name: management-plane-workers
+  name: cluster-001-workers
   namespace: default
 spec:
   template:
     spec:
       generateType: join
-      talosVersion: v1.5.0-beta.0
+      talosVersion: v1.4.7
 ---
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineDeployment
 metadata:
-  name: management-plane-workers
+  name: cluster-001-workers
   namespace: default
 spec:
-  clusterName: management-plane
+  clusterName: cluster-001
   replicas: 0
   selector:
     matchLabels: null
@@ -87,18 +87,18 @@ spec:
         configRef:
           apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
           kind: TalosConfigTemplate
-          name: management-plane-workers
-      clusterName: management-plane
+          name: cluster-001-workers
+      clusterName: cluster-001
       infrastructureRef:
         apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
         kind: MetalMachineTemplate
-        name: management-plane-workers
+        name: cluster-001-workers
       version: v1.27.4
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
 kind: MetalMachineTemplate
 metadata:
-  name: management-plane-workers
+  name: cluster-001-workers
   namespace: default
 spec:
   template:

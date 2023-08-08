@@ -62,7 +62,7 @@ spec:
             vip:
               ip: 192.168.21.20
       generateType: controlplane
-      talosVersion: v1.5.0-beta.0
+      talosVersion: v1.4.7
     init:
       configPatches:
       - op: add
@@ -75,7 +75,7 @@ spec:
               ip: 192.168.21.20
       generateType: init
       # renovate: depName=siderolabs/talos
-      talosVersion: v1.5.0-beta.0
+      talosVersion: v1.4.7
   infrastructureTemplate:
     apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
     kind: MetalMachineTemplate
@@ -83,3 +83,51 @@ spec:
   replicas: 1
   # renovate: depName=registry.k8s.io/kube-apiserver
   version: v1.27.4
+---
+apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
+kind: TalosConfigTemplate
+metadata:
+  name: cluster-001-workers
+  namespace: default
+spec:
+  template:
+    spec:
+      generateType: join
+      talosVersion: v1.4.7
+---
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: MachineDeployment
+metadata:
+  name: cluster-001-workers
+  namespace: default
+spec:
+  clusterName: cluster-001
+  replicas: 1
+  selector:
+    matchLabels: null
+  template:
+    spec:
+      bootstrap:
+        configRef:
+          apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
+          kind: TalosConfigTemplate
+          name: cluster-001-workers
+      clusterName: cluster-001
+      infrastructureRef:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+        kind: MetalMachineTemplate
+        name: cluster-001-workers
+      version: v1.27.4
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
+kind: MetalMachineTemplate
+metadata:
+  name: cluster-001-workers
+  namespace: default
+spec:
+  template:
+    spec:
+      serverClassRef:
+        apiVersion: metal.sidero.dev/v1alpha1
+        kind: ServerClass
+        name: rpi4-8gb

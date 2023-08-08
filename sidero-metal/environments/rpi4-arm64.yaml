@@ -4,7 +4,7 @@ metadata:
   name: rpi4-arm64
 spec:
   kernel:
-    url: https://github.com/siderolabs/talos/releases/download/v1.5.0-beta.0/vmlinuz-arm64
+    url: https://github.com/siderolabs/talos/releases/download/v1.4.7/vmlinuz-arm64
     args:
       - console=tty0
       - console=ttyS1,115200n8
@@ -23,4 +23,4 @@ spec:
       - talos.platform=metal
       - talos.board=rpi_4
   initrd:
-    url: https://github.com/siderolabs/talos/releases/download/v1.5.0-beta.0/initramfs-arm64.xz
+    url: https://github.com/siderolabs/talos/releases/download/v1.4.7/initramfs-arm64.xz
